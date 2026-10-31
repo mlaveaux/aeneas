@@ -517,4 +517,203 @@ def zip_iter (a : Slice Std.U8) (b : Slice Std.U8) : Result Unit := do
       (core.iter.traits.iterator.IteratorSliceIter Std.U8)) i i1
   zip_iter_loop iter
 
+/-- [iterators::map_iter::{closure}]
+    Source: 'tests/src/iterators.rs', lines 74:26-74:32 -/
+@[reducible]
+def map_iter.closure := Unit
+
+/-- [iterators::map_iter::{impl core::ops::function::FnMut<(&'_0 u32,), u32> for iterators::map_iter::{closure}}::call_mut]:
+    Source: 'tests/src/iterators.rs', lines 74:26-74:32 -/
+def map_iter.closure.Insts.CoreOpsFunctionFnMutTupleShared0U32U32.call_mut
+  (c : map_iter.closure) (tupled_args : Std.U32) :
+  Result (Std.U32 × map_iter.closure)
+  := do
+  ok (tupled_args, c)
+
+/-- [iterators::map_iter::{impl core::ops::function::FnOnce<(&'_0 u32,), u32> for iterators::map_iter::{closure}}::call_once]:
+    Source: 'tests/src/iterators.rs', lines 74:26-74:32 -/
+def map_iter.closure.Insts.CoreOpsFunctionFnOnceTupleShared0U32U32.call_once
+  (c : map_iter.closure) (i : Std.U32) : Result Std.U32 := do
+  let (i1, _) ←
+    map_iter.closure.Insts.CoreOpsFunctionFnMutTupleShared0U32U32.call_mut c i
+  ok i1
+
+/-- Trait implementation: [iterators::map_iter::{impl core::ops::function::FnOnce<(&'_0 u32,), u32> for iterators::map_iter::{closure}}]
+    Source: 'tests/src/iterators.rs', lines 74:26-74:32 -/
+@[reducible]
+def map_iter.closure.Insts.CoreOpsFunctionFnOnceTupleShared0U32U32 :
+  core.ops.function.FnOnce map_iter.closure Std.U32 Std.U32 := {
+  call_once :=
+    map_iter.closure.Insts.CoreOpsFunctionFnOnceTupleShared0U32U32.call_once
+}
+
+/-- Trait implementation: [iterators::map_iter::{impl core::ops::function::FnMut<(&'_0 u32,), u32> for iterators::map_iter::{closure}}]
+    Source: 'tests/src/iterators.rs', lines 74:26-74:32 -/
+@[reducible]
+def map_iter.closure.Insts.CoreOpsFunctionFnMutTupleShared0U32U32 :
+  core.ops.function.FnMut map_iter.closure Std.U32 Std.U32 := {
+  FnOnceInst := map_iter.closure.Insts.CoreOpsFunctionFnOnceTupleShared0U32U32
+  call_mut :=
+    map_iter.closure.Insts.CoreOpsFunctionFnMutTupleShared0U32U32.call_mut
+}
+
+/-- [iterators::map_iter]: loop body 0:
+    Source: 'tests/src/iterators.rs', lines 74:4-76:5
+    Visibility: public -/
+@[rust_loop_body]
+def map_iter_loop.body
+  (iter : core.iter.adapters.map.Map (core.slice.iter.Iter Std.U32)
+  map_iter.closure) (acc : Std.U32) :
+  Result (ControlFlow ((core.iter.adapters.map.Map (core.slice.iter.Iter
+    Std.U32) map_iter.closure) × Std.U32) Std.U32)
+  := do
+  let (o, iter1) ←
+    core.iter.adapters.map.Map.Insts.CoreIterTraitsIteratorIterator.next
+      (core.iter.traits.iterator.IteratorSliceIter Std.U32)
+      map_iter.closure.Insts.CoreOpsFunctionFnMutTupleShared0U32U32 iter
+  match o with
+  | none => ok (done acc)
+  | some y => ok (cont (iter1, y))
+
+/-- [iterators::map_iter]: loop 0:
+    Source: 'tests/src/iterators.rs', lines 74:4-76:5
+    Visibility: public -/
+@[rust_loop]
+def map_iter_loop
+  (iter : core.iter.adapters.map.Map (core.slice.iter.Iter Std.U32)
+  map_iter.closure) (acc : Std.U32) :
+  Result Std.U32
+  := do
+  loop
+    (fun (iter1, acc1) => map_iter_loop.body iter1 acc1)
+    (iter, acc)
+
+/-- [iterators::map_iter]:
+    Source: 'tests/src/iterators.rs', lines 72:0-78:1
+    Visibility: public -/
+def map_iter (s : Slice Std.U32) : Result Std.U32 := do
+  let i ← core.slice.Slice.iter s
+  let iter ←
+    core.iter.traits.iterator.Iterator.map.trait_default
+      (core.iter.traits.iterator.IteratorSliceIter Std.U32)
+      map_iter.closure.Insts.CoreOpsFunctionFnMutTupleShared0U32U32 i ()
+  map_iter_loop iter 0#u32
+
+/-- [iterators::map_collect::{closure}]
+    Source: 'tests/src/iterators.rs', lines 81:17-81:27 -/
+@[reducible]
+def map_collect.closure := Unit
+
+/-- [iterators::map_collect::{impl core::ops::function::FnMut<(&'_0 u32,), u32> for iterators::map_collect::{closure}}::call_mut]:
+    Source: 'tests/src/iterators.rs', lines 81:17-81:27 -/
+def map_collect.closure.Insts.CoreOpsFunctionFnMutTupleShared0U32U32.call_mut
+  (c : map_collect.closure) (tupled_args : Std.U32) :
+  Result (Std.U32 × map_collect.closure)
+  := do
+  let i ← tupled_args / 2#u32
+  ok (i, c)
+
+/-- [iterators::map_collect::{impl core::ops::function::FnOnce<(&'_0 u32,), u32> for iterators::map_collect::{closure}}::call_once]:
+    Source: 'tests/src/iterators.rs', lines 81:17-81:27 -/
+def map_collect.closure.Insts.CoreOpsFunctionFnOnceTupleShared0U32U32.call_once
+  (c : map_collect.closure) (i : Std.U32) : Result Std.U32 := do
+  let (i1, _) ←
+    map_collect.closure.Insts.CoreOpsFunctionFnMutTupleShared0U32U32.call_mut c
+      i
+  ok i1
+
+/-- Trait implementation: [iterators::map_collect::{impl core::ops::function::FnOnce<(&'_0 u32,), u32> for iterators::map_collect::{closure}}]
+    Source: 'tests/src/iterators.rs', lines 81:17-81:27 -/
+@[reducible]
+def map_collect.closure.Insts.CoreOpsFunctionFnOnceTupleShared0U32U32 :
+  core.ops.function.FnOnce map_collect.closure Std.U32 Std.U32 := {
+  call_once :=
+    map_collect.closure.Insts.CoreOpsFunctionFnOnceTupleShared0U32U32.call_once
+}
+
+/-- Trait implementation: [iterators::map_collect::{impl core::ops::function::FnMut<(&'_0 u32,), u32> for iterators::map_collect::{closure}}]
+    Source: 'tests/src/iterators.rs', lines 81:17-81:27 -/
+@[reducible]
+def map_collect.closure.Insts.CoreOpsFunctionFnMutTupleShared0U32U32 :
+  core.ops.function.FnMut map_collect.closure Std.U32 Std.U32 := {
+  FnOnceInst :=
+    map_collect.closure.Insts.CoreOpsFunctionFnOnceTupleShared0U32U32
+  call_mut :=
+    map_collect.closure.Insts.CoreOpsFunctionFnMutTupleShared0U32U32.call_mut
+}
+
+/-- [iterators::map_collect]:
+    Source: 'tests/src/iterators.rs', lines 80:0-82:1
+    Visibility: public -/
+def map_collect (s : Slice Std.U32) : Result (alloc.vec.Vec Std.U32) := do
+  let i ← core.slice.Slice.iter s
+  let m ←
+    core.iter.traits.iterator.Iterator.map.trait_default
+      (core.iter.traits.iterator.IteratorSliceIter Std.U32)
+      map_collect.closure.Insts.CoreOpsFunctionFnMutTupleShared0U32U32 i ()
+  core.iter.traits.iterator.Iterator.collect.default
+    (core.iter.adapters.map.Map.Insts.CoreIterTraitsIteratorIterator
+    (core.iter.traits.iterator.IteratorSliceIter Std.U32)
+    map_collect.closure.Insts.CoreOpsFunctionFnMutTupleShared0U32U32)
+    (core.iter.traits.collect.FromIteratorVec Std.U32) m
+
+/-- [iterators::range_map_collect::{closure}]
+    Source: 'tests/src/iterators.rs', lines 85:15-85:20 -/
+@[reducible]
+def range_map_collect.closure := Unit
+
+/-- [iterators::range_map_collect::{impl core::ops::function::FnMut<(usize,), usize> for iterators::range_map_collect::{closure}}::call_mut]:
+    Source: 'tests/src/iterators.rs', lines 85:15-85:20 -/
+def
+  range_map_collect.closure.Insts.CoreOpsFunctionFnMutTupleUsizeUsize.call_mut
+  (c : range_map_collect.closure) (tupled_args : Std.Usize) :
+  Result (Std.Usize × range_map_collect.closure)
+  := do
+  ok (tupled_args, c)
+
+/-- [iterators::range_map_collect::{impl core::ops::function::FnOnce<(usize,), usize> for iterators::range_map_collect::{closure}}::call_once]:
+    Source: 'tests/src/iterators.rs', lines 85:15-85:20 -/
+def
+  range_map_collect.closure.Insts.CoreOpsFunctionFnOnceTupleUsizeUsize.call_once
+  (c : range_map_collect.closure) (i : Std.Usize) : Result Std.Usize := do
+  let (i1, _) ←
+    range_map_collect.closure.Insts.CoreOpsFunctionFnMutTupleUsizeUsize.call_mut
+      c i
+  ok i1
+
+/-- Trait implementation: [iterators::range_map_collect::{impl core::ops::function::FnOnce<(usize,), usize> for iterators::range_map_collect::{closure}}]
+    Source: 'tests/src/iterators.rs', lines 85:15-85:20 -/
+@[reducible]
+def range_map_collect.closure.Insts.CoreOpsFunctionFnOnceTupleUsizeUsize :
+  core.ops.function.FnOnce range_map_collect.closure Std.Usize Std.Usize := {
+  call_once :=
+    range_map_collect.closure.Insts.CoreOpsFunctionFnOnceTupleUsizeUsize.call_once
+}
+
+/-- Trait implementation: [iterators::range_map_collect::{impl core::ops::function::FnMut<(usize,), usize> for iterators::range_map_collect::{closure}}]
+    Source: 'tests/src/iterators.rs', lines 85:15-85:20 -/
+@[reducible]
+def range_map_collect.closure.Insts.CoreOpsFunctionFnMutTupleUsizeUsize :
+  core.ops.function.FnMut range_map_collect.closure Std.Usize Std.Usize := {
+  FnOnceInst :=
+    range_map_collect.closure.Insts.CoreOpsFunctionFnOnceTupleUsizeUsize
+  call_mut :=
+    range_map_collect.closure.Insts.CoreOpsFunctionFnMutTupleUsizeUsize.call_mut
+}
+
+/-- [iterators::range_map_collect]:
+    Source: 'tests/src/iterators.rs', lines 84:0-86:1
+    Visibility: public -/
+def range_map_collect (n : Std.Usize) : Result (alloc.vec.Vec Std.Usize) := do
+  let m ←
+    core.iter.traits.iterator.Iterator.map.trait_default
+      (core.iter.traits.iterator.IteratorRange core.iter.range.StepUsize)
+      range_map_collect.closure.Insts.CoreOpsFunctionFnMutTupleUsizeUsize
+      { start := 0#usize, «end» := n } ()
+  core.iter.traits.iterator.Iterator.collect.default
+    (core.iter.adapters.map.Map.Insts.CoreIterTraitsIteratorIterator
+    (core.iter.traits.iterator.IteratorRange core.iter.range.StepUsize)
+    range_map_collect.closure.Insts.CoreOpsFunctionFnMutTupleUsizeUsize)
+    (core.iter.traits.collect.FromIteratorVec Std.Usize) m
+
 end iterators

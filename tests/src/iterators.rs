@@ -69,6 +69,22 @@ pub fn zip_iter(a: &[u8], b: &[u8]) {
     for _ in a.iter().zip(b.iter()) {}
 }
 
+pub fn map_iter(s: &[u32]) -> u32 {
+    let mut acc = 0;
+    for y in s.iter().map(|x| *x) {
+        acc = y;
+    }
+    acc
+}
+
+pub fn map_collect(s: &[u32]) -> Vec<u32> {
+    s.iter().map(|x| *x / 2).collect()
+}
+
+pub fn range_map_collect(n: usize) -> Vec<usize> {
+    (0..n).map(|i| i).collect()
+}
+
 /*
 fn array_into_iter<const N : usize>(s : &[u8; N]) {
     for _ in s {}
